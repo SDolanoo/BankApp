@@ -1,12 +1,15 @@
 import tkinter as tk
 from tkinter import messagebox, ttk
 from Bank_gui.bank_gui import BankGui, THEME_COLOR, FONT
+from NBP_api.NBPapi import NBPapi
+
 
 class LoggedInUser(BankGui):
 
     def __init__(self, user: str):
         BankGui.__init__(self)
         self.user = user
+        self.nbp_api = NBPapi()
         self.is_logged_in = True
         self.logged_in_page_setup()
         self.mainloop()
@@ -27,6 +30,8 @@ class LoggedInUser(BankGui):
         self.transfer_money_button.grid(row=2, column=1)
         self.log_out_button = tk.Button(text="Log out", command=self.log_out_clicked)
         self.log_out_button.grid(row=3, column=1)
+        self.currencies_button = tk.Button(text="Exchange rates", command=self.currencies_button_clicked)
+        self.currencies_button.grid(row=4, column=0, columnspan=2)
 
     def withdraw_money_clicked(self):
         def withdraw_button_clicked():
@@ -115,6 +120,30 @@ class LoggedInUser(BankGui):
         # Button
         transfer_button = tk.Button(transfer_window, text="Deposit", command=transfer_button_clicked)
         transfer_button.grid(row=4, column=0)
+
+    def currencies_button_clicked(self) -> None:
+        def make_currencies_list():
+            lst = [("currency", "code", "bid", "ask")]
+            text = self.nbp_api.get_whole_table_of_main_currencies()
+            for i in text["rates"]:
+                currencies = (i["currency"], i["code"], i["bid"], i["ask"])
+                lst.append(currencies)
+            return lst
+        # currencies window setup
+        currencies_window = tk.Toplevel()
+        currencies_window.title("Exchange rates")
+        currencies_window.config(padx=20, pady=20, bg=THEME_COLOR)
+        # init list
+        currencies_list = make_currencies_list()
+        total_rows = len(currencies_list)
+        total_columns = len(currencies_list[0])
+        # code for creating table
+        for i in range(total_rows):
+            for j in range(total_columns):
+                self.e = tk.Entry(currencies_window, width=20, fg='blue', font=('Arial', 16, 'bold'))
+
+                self.e.grid(row=i, column=j)
+                self.e.insert(tk.END, currencies_list[i][j])
 
     def log_out_clicked(self):
         self.is_logged_in = False

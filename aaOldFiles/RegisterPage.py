@@ -1,7 +1,7 @@
 import tkinter as tk
 from tkinter import messagebox
 from Bank_gui.bank_gui import BankGui, THEME_COLOR, FONT
-from Bank_gui.LoginPage import LoginPage
+
 
 class RegisterPage(BankGui):
 

@@ -1,5 +1,5 @@
 import pandas as pd
-from pandas import DataFrame
+from tkinter import filedialog
 
 FILE_PATH = "C:\\Users\\Dolan\\OneDrive - Wojskowa Akademia Techniczna\\Pulpit\\InWorkBankApp\\File_operator\\data.csv"
 
@@ -9,7 +9,7 @@ class FileOperator:
         self.create_database()
         self.existing_csv = pd.read_csv(FILE_PATH)
 
-    def create_database(self):
+    def create_database(self) -> None:
         admin_data_for_creation_only = {
             "username": ["Admin"],
             "password": ["VeryStrongPassword"],
@@ -27,7 +27,7 @@ class FileOperator:
         self.existing_csv = pd.concat([self.existing_csv, new_data], ignore_index=True)
         self.existing_csv.to_csv(FILE_PATH, index=False)
 
-    def check_balance(self, username: str):
+    def check_balance(self, username: str) -> None:
         user_index = self.existing_csv.index.get_loc(
         self.existing_csv[self.existing_csv["username"] == f"{username}"].index[0])
         user_balance = self.existing_csv.loc[user_index, "balance"]
@@ -61,7 +61,7 @@ class FileOperator:
     def get_all_users(self) -> list:
         return [i for i in self.existing_csv["username"]]
 
-
+# ____________TESTS___________
 #file_op = FileOperator()
 #var = file_op.existing_csv
 #print(var)
